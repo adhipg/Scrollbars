@@ -126,7 +126,8 @@
 				obj.addClass(id).addClass(classes['scrollElement']).addClass(classes['rootElement']);
 
 				var xSpace = data.opts.xSpace,
-					ySpace = data.opts.ySpace;
+					ySpace = data.opts.ySpace,
+                    temp;
 				
 				if (xSpace === 'auto') {
 					temp = $("<div/>", {"class": classes['dragCon'] + " scrollElement " + classes['dragCon'] + "X"}).appendTo("body");
@@ -157,9 +158,11 @@
 				});
 
 				// Make sure that rootWrap stays the same size as its parent
-				if (data.opts.persistantSize && $.fn._bind) {
-					obj.resize(function() {
-						var data = methods.getData.call($(this));
+				if (data.opts.persistantSize && $.fn.bind) {
+					// Delegating to window as the resize event is not called 
+                    // reliably for some reason.
+                    $(window).resize(function() {
+						var data = methods.getData.call($(obj));
 						data.rootWrap.css({
 							width: obj.width() - data.opts.ySpace,
 							height: obj.height() - data.opts.xSpace
